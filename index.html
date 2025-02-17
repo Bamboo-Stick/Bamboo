@@ -10,40 +10,57 @@
 
   gtag('config', 'G-88SCVRENDR');
 </script>
-    <!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+   <script type="module">
+  // Import Firebase modules
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
-<script>
-  // Firebase configuration (replace with your credentials)
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyDICHcuhYxUybELpCbWJZE6ZSSZqXxELSY",
+    authDomain: "bamboo-77eeb.firebaseapp.com",
+    projectId: "bamboo-77eeb",
+    storageBucket: "bamboo-77eeb.appspot.com",
+    messagingSenderId: "616795546111",
+    appId: "1:616795546111:web:2a9b6882b781c749b347ca",
+    measurementId: "G-XXD45DSS7G"
   };
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getFirestore(app);
 
-  function submitEmail(event) {
-    event.preventDefault();
-    let email = document.getElementById("email").value;
-    
-    db.collection("emails").add({ email: email })
-      .then(() => alert("Email saved successfully!"))
-      .catch(error => console.error("Error saving email: ", error));
-  }
+  document.addEventListener("DOMContentLoaded", function () {
+    const emailForm = document.getElementById("emailForm");
+
+    emailForm.addEventListener("submit", async function (event) {
+      event.preventDefault(); // Prevent page refresh
+
+      const emailInput = document.querySelector('input[name="email"]');
+      const email = emailInput.value.trim();
+
+      // Basic validation
+      if (email === "" || !email.includes("@")) {
+        alert("Please enter a valid email.");
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, "emails"), {
+          email: email,
+          timestamp: new Date()
+        });
+
+        alert("Email saved successfully!");
+        emailInput.value = ""; // Clear input after success
+      } catch (error) {
+        console.error("Error saving email:", error);
+        alert("Failed to save email.");
+      }
+    });
+  });
 </script>
 
-<!-- Form -->
-
-<script>
-document.getElementById("emailForm").addEventListener("submit", submitEmail);
-</script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
